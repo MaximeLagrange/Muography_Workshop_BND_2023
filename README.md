@@ -30,7 +30,7 @@ Depending on your initial OS, checkout these videos which detail how to create a
 - [Windows](https://www.youtube.com/watch?v=zHwFtyxJsog)
 - [Mac](https://www.youtube.com/watch?v=b_tOialCSXE)
 
-*N.B* Make sure you assign enough disk to the virtual machine. At least 30 GB.
+*N.B Make sure you assign enough disk to the virtual machine. At least **30 GB**.*
 
 #### C - Virtual machine testing
 
