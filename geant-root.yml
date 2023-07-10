@@ -1,0 +1,10 @@
+name: geant-root
+
+channels:
+  - conda-forge
+
+dependencies:
+  - ipykernel
+  - matplotlib
+  - geant4
+  - root
