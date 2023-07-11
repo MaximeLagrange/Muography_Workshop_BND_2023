@@ -182,7 +182,7 @@ Save and exit.
 
 We need to import a few files from the GEANT4 examples in CRY, and include them in the `src/` and `include/` directories of our exampleB1 by running:
 
-'''
+```
 cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
 rm PrimaryGeneratorAction.cc
 cd ..
@@ -194,23 +194,23 @@ cp PrimaryGeneratorActionMessenger.cc RNGWrapper.cc PrimaryGeneratorMessenger.cc
 
 cd /home/usr/micromamba/envs/geant-root/cry_v1.7/geant/include/
 cp PrimaryGeneratorActionMessenger.hh RNGWrapper.hh PrimaryGeneratorMessenger.hh /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/include/
-'''
+```
 
 #### F - Modifying B1 files
 
-##### Removing `namespace B1`
+##### Removing namespace B1
 
 To make things work, we still have modify files. All files in `/B1/src/` and `/B1/include/` start with:
 
-'''
+```
 namespace B1{
 
     ...
 }
-'''
+```
 Open all those files and remove it (Do not forget to also remove the brackets!).
 
-##### `PrimaryGeneratorAction.cc`
+##### PrimaryGeneratorAction.cc
 
 We must tell GEANT4 where the CRY data is located. Using search and replace (ctrl + h), sarch all instances of `../data` and replace it by the path to cry_v1.7 data, which should be:
 
@@ -220,15 +220,16 @@ We must tell GEANT4 where the CRY data is located. Using search and replace (ctr
 
 You must also include the `G4SystemOfUnits.hh` file by adding `#include "G4SystemOfUnits.hh"`.
 
-##### `ActionInitialization.cc`
+##### ActionInitialization.cc
 
 Open the `/src/PrimaryGeneratorAction.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
 
-##### `RunAction.cc`
+##### RunAction.cc
+
 
 Open the `RunAction.cc` and comment lines from 105 to 150. (Within `void RunAction::EndOfRunAction(const G4Run* run){}`).
 
-##### `exampleB1.cc`
+##### exampleB1.cc
 
 Open the `B1/exampleB1.cc` file, and replace line 90 (`if ( ! ui ){`) by `if (argc>1){`.
 
