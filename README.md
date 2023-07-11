@@ -78,17 +78,176 @@ micromamba activate geant-root
 cd micromamba/envs/geant-root/share/Geant4-11.0.3/examples/basic/B1/
 mkdir build
 cd build
+```
+
+We will now run the `cmake ../` command. BEFORE CONTINUING, MAKE SURE YOU ARE IN THE `build/` DIRECTORY!
+
+```
 cmake ../
 make
+```
+
+Now is the moment of truth! Try to run the exampleB1 by running:
+
+```
 ./exampleB1
 ```
 
- ### III - Python environment
+You should see a window poping, display the structure of the detector (if you run into errors, please report it in the Slack installation channel). Once you it is working properly, you can delete the build directory. Another one will be created during the installation of CRY.
+
+The exampleB1 will be used as base for the activities of this workshop, so do not modify it, neither any other file in the B1 directory (unless we ask you to do so)!
+
+### III - CRY installation
+
+[CRY](https://nuclear.llnl.gov/simulation/doc_cry_v1.7/cry.pdf) is cosmic-ray shower librairy used to generate correlated cosmic-ray particle shower distributions. Installing it and linking it to GEANT4 will allow us to simulate cosmic muons and propagate them through our detector and volume of interest.
+
+#### A - Download
+
+CRY can be downloaded [here](https://nuclear.llnl.gov/simulation/). Download it, open a terminal window an run:
+
+```
+cd Downloads/
+tar -xvf cry_v1.7.tar.gz
+mv cry_v1.7 ../micromamba/envs/geant-root/
+```
+
+#### B - Make
+
+Now we will go in the cry_directory (`micromamba/envs/geant-root/`) and make CRY. This will create a `libCRY.a` file in `cry_v1.7/lib`.
+
+```
+cd ../micromamba/envs/geant-root/cry_v1.7/
+make
+```
+
+#### C - Modify CMakeLists.txt
+
+It is now possible to link CRY to exampleB1. In order to do so, we must modify the CMakeLists.txt so that GEANT4 knows how to access the CRY library. 
+
+```
+cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/
+```
+
+Open the `CMakeLists.txt` file and after `project(B1)` add the following lines:
+
+```
+set(CRY_PATH /home/usr/micromamba/envs/geant-root/cry_v1.7)
+set(CRY_LIB -L${CRY_PATH}/lib libCRY.a)
+include_directories(${CRY_PATH}/src)
+```
+
+Search for `target_link_libraries(exampleB1 ${Geant4_LIBRARIES})` and replace it by `target_link_libraries(exampleB1 ${Geant4_LIBRARIES}  ${CRY_LIB})` .
+
+Finally, at line (check which line it is! e.g. between run1.mac and run2.mac) add `cmd.file` 
+
+#### D - Create cmd.file
+
+We need to create the file used to drive the cosmic shower generation. Run the following:
+
+```
+cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/
+nano cmd.file
+```
+
+Paste the following in the file:
+
+```
+/run/initialize
+/CRY/input returnNeutrons 0
+/CRY/input returnProtons 0
+/CRY/input returnGammas 0
+/CRY/input returnPions 0
+/CRY/input returnKaons 0
+/CRY/input returnElectrons 0
+/CRY/input returnMuons 1
+/CRY/input date 7-1-2012
+/CRY/input latitude 48.0
+/CRY/input altitude 0
+/CRY/input subboxLength 1.2
+/CRY/input nParticlesMin 1
+/CRY/input nParticlesMax 2
+/CRY/update
+
+/control/execute vis.mac
+/vis/viewer/set/viewpointThetaPhi 90. 0.
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add mu+
+
+/run/beamOn 1000
+```
+
+Save and exit.
+
+#### E - Import generator files from CRY
+
+We need to import a few files from the GEANT4 examples in CRY, and include them in the `src/` and `include/` directories of our exampleB1 by running:
+
+'''
+cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
+rm PrimaryGeneratorAction.cc
+cd ..
+cd include/
+rm PrimaryGeneratorAction.hh
+
+cd /home/usr/micromamba/envs/geant-root/cry_v1.7/geant/src/
+cp PrimaryGeneratorActionMessenger.cc RNGWrapper.cc PrimaryGeneratorMessenger.cc /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
+
+cd /home/usr/micromamba/envs/geant-root/cry_v1.7/geant/include/
+cp PrimaryGeneratorActionMessenger.hh RNGWrapper.hh PrimaryGeneratorMessenger.hh /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/include/
+'''
+
+#### F - Modifying B1 files
+
+##### Removing `namespace B1`
+
+To make things work, we still have modify files. All files in `/B1/src/` and `/B1/include/` start with:
+
+'''
+namespace B1{
+
+    ...
+}
+'''
+Open all those files and remove it (Do not forget to also remove the brackets!).
+
+##### `PrimaryGeneratorAction.cc`
+
+We must tell GEANT4 where the CRY data is located. Using search and replace (ctrl + h), sarch all instances of `../data` and replace it by the path to cry_v1.7 data, which should be:
+
+```
+/home/usr/micromamba/envs/geant-root/cry_v1.7/data
+```
+
+You must also include the `G4SystemOfUnits.hh` file by adding `#include "G4SystemOfUnits.hh"`.
+
+##### `ActionInitialization.cc`
+
+Open the `/src/PrimaryGeneratorAction.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
+
+##### `RunAction.cc`
+
+Open the `RunAction.cc` and comment lines from 105 to 150. (Within `void RunAction::EndOfRunAction(const G4Run* run){}`).
+
+##### `exampleB1.cc`
+
+Open the `B1/exampleB1.cc` file, and replace line 90 (`if ( ! ui ){`) by `if (argc>1){`.
+
+#### G - Testing
+
+```
+cd B1/
+mkdir build
+cd build
+cmake ../
+make
+./exampleB1 cmd.file
+```
+
+ ### IV - Python environment
 
  We will use python to analyse the simulated data. We need to create an environment with all the required libraries. Once again, `micromamba` can do that with just one command line:
 
 ```
 micromamba create -n muograph_env jupyterlab pytorch pandas scikit-spatial -c conda-forge
 micromamba activate muograph_env
-
 ```
