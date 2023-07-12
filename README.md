@@ -194,10 +194,10 @@ cd include/
 rm PrimaryGeneratorAction.hh
 
 cd /home/usr/micromamba/envs/geant-root/cry_v1.7/geant/src/
-cp PrimaryGeneratorActionMessenger.cc RNGWrapper.cc PrimaryGeneratorMessenger.cc /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
+cp PrimaryGeneratorAction.cc RNGWrapper.cc PrimaryGeneratorMessenger.cc /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
 
 cd /home/usr/micromamba/envs/geant-root/cry_v1.7/geant/include/
-cp PrimaryGeneratorActionMessenger.hh RNGWrapper.hh PrimaryGeneratorMessenger.hh /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/include/
+cp PrimaryGeneratorAction.hh RNGWrapper.hh PrimaryGeneratorMessenger.hh /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/include/
 ```
 
 #### F - Modifying B1 files
