@@ -235,7 +235,7 @@ Open the `B1/src/RunAction.cc` file and comment lines from 105 to 150. (Within `
 
 ##### exampleB1.cc
 
-Open the `B1/exampleB1.cc` file, and replace line 90 (`if ( ! ui ){`) by `if (argc>1){`.
+Open the `B1/exampleB1.cc` file, and replace line 90 `if ( ! ui ){` by `if (argc>1){`.
 
 #### G - Testing
 
@@ -265,5 +265,13 @@ You should see a window poping, which displays the structure of the detector (if
 micromamba create -n muograph_env jupyterlab pytorch pandas scikit-spatial -c conda-forge
 micromamba activate muograph_env
 ```
+
+After downloading the repositoy, open a terminal window and run:
+
+```
+jupyter lab
+```
+
+Try to run a few cells from the Tutorial_0 to see if everything is running smoothly (if you run into errors, please report it in the dedicated Slack channel).
 
 Now the framework is finally ready to go! Apologies for this painful installation prcedures and see you at the workshop!
