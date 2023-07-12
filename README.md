@@ -1,5 +1,9 @@
 # Muon scattering tomography end-to-end simulation framework
 
+This repository aims at guiding the user for the installation of an end-to-end muon scattering tomography framework required for the BND School 2023, held in Wuppertal, Germany. For more information, please have look at the [introductory slides] ADD LINK!!.
+
+*N.B: The full installation might take some time. Please make sure that you **install the framework prior to the workshop**! If you run into issues you cannot solve by yourself, please use the [dedicated slack chanel](https://join.slack.com/share/enQtNTU2MzQ2ODkzNzMzMy1jNGY1ODhlZjI0NDcxOWUxZTIwZWRjNjU4YTIxMDRlNjA5NzhmZjZmZTg1NjdiOTJiMWM3OTA1ZWQyN2Y4NGMw).* **Update the link before the workshop!** 
+
 ## Installation
 
 Debuging GEANT4 code can be a painful experience. In order to make this workshop a succes, one need every participant to run the same **Operating System** (OS) so that everybody is on the same page. A "simple" solution is the use of a **Virtual Machine** (VM),  a compute resource that uses software instead of a physical computer to run programs and deploy apps. Using it, every participant will be able to run the same OS, in our case **Ubuntu 22.04**.
@@ -30,7 +34,7 @@ Depending on your initial OS, checkout these videos which detail how to create a
 - [Windows](https://www.youtube.com/watch?v=zHwFtyxJsog)
 - [Mac](https://www.youtube.com/watch?v=b_tOialCSXE)
 
-*N.B Make sure you assign enough disk to the virtual machine. At least **30 GB**.*
+*N.B Make sure you assign enough disk to the virtual machine. At least **35 GB**.*
 
 #### C - Virtual machine testing
 
@@ -59,7 +63,7 @@ wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -
 source ~/.bashrc
 ```
 #### B - GEANT4 - Root installation
-Now download the `geant-root.yml` and move it to `/home/user/`. Go in the `/home/user/` directory  and run:
+Now download the `geant-root.yml` and move it to `/home/user/`. Go in the `/home/usr/` directory (replace `usr` by your actual user name) and run:
 
 ```
 ./bin/micromamba create -f geant-root.yml
@@ -93,7 +97,7 @@ Now is the moment of truth! Try to run the exampleB1 by running:
 ./exampleB1
 ```
 
-You should see a window poping, display the structure of the detector (if you run into errors, please report it in the Slack installation channel). Once you it is working properly, you can delete the build directory. Another one will be created during the installation of CRY.
+You should see a window poping, which displays the structure of the detector (if you run into errors, please report it in the dedicated Slack channel). Once you it is working properly, you can delete the build directory. Another one will be created during the installation of CRY.
 
 The exampleB1 will be used as base for the activities of this workshop, so do not modify it, neither any other file in the B1 directory (unless we ask you to do so)!
 
@@ -180,7 +184,7 @@ Save and exit.
 
 #### E - Import generator files from CRY
 
-We need to import a few files from the GEANT4 examples in CRY, and include them in the `src/` and `include/` directories of our exampleB1 by running:
+We need to import a few files from the CRY GEANT4 examples in the `src/` and `include/` directories of our exampleB1 by running:
 
 ```
 cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/src/
@@ -200,7 +204,7 @@ cp PrimaryGeneratorActionMessenger.hh RNGWrapper.hh PrimaryGeneratorMessenger.hh
 
 ##### Removing namespace B1
 
-To make things work, we still have modify files. All files in `/B1/src/` and `/B1/include/` start with:
+To make things work, we still have to modify files. All files in `/B1/src/` and `/B1/include/` start with:
 
 ```
 namespace B1{
@@ -208,11 +212,11 @@ namespace B1{
     ...
 }
 ```
-Open all those files and remove it (Do not forget to also remove the brackets!).
+Open all those files and remove it *(Do not forget to also remove the brackets!)*.
 
 ##### PrimaryGeneratorAction.cc
 
-We must tell GEANT4 where the CRY data is located. Using search and replace (ctrl + h), sarch all instances of `../data` and replace it by the path to cry_v1.7 data, which should be:
+We must tell GEANT4 where the CRY data is located. Using search and replace (ctrl + h), search all instances of `../data` in the `B1/src/PrimaryGeneratorAction.cc` file and replace them by the actual path to cry_v1.7 data, which should be:
 
 ```
 /home/usr/micromamba/envs/geant-root/cry_v1.7/data
@@ -222,12 +226,12 @@ You must also include the `G4SystemOfUnits.hh` file by adding `#include "G4Syste
 
 ##### ActionInitialization.cc
 
-Open the `/src/PrimaryGeneratorAction.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
+Open the `B1/src/PrimaryGeneratorAction.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
 
 ##### RunAction.cc
 
 
-Open the `RunAction.cc` and comment lines from 105 to 150. (Within `void RunAction::EndOfRunAction(const G4Run* run){}`).
+Open the `B1/src/RunAction.cc` file and comment lines from 105 to 150. (Within `void RunAction::EndOfRunAction(const G4Run* run){}`).
 
 ##### exampleB1.cc
 
@@ -235,14 +239,23 @@ Open the `B1/exampleB1.cc` file, and replace line 90 (`if ( ! ui ){`) by `if (ar
 
 #### G - Testing
 
+Now is the moment of truth! Run the modified exampleB1:
+
 ```
 cd B1/
 mkdir build
 cd build
+```
+
+**Before running **`cmake ../`**, make sure you are in the `build/` directory!**
+
+```
 cmake ../
 make
 ./exampleB1 cmd.file
 ```
+
+You should see a window poping, which displays the structure of the detector (if you run into errors, please report it in the dedicated Slack channel).
 
  ### IV - Python environment
 
@@ -252,3 +265,5 @@ make
 micromamba create -n muograph_env jupyterlab pytorch pandas scikit-spatial -c conda-forge
 micromamba activate muograph_env
 ```
+
+Now the framework is finally ready to go! Apologies for this painful installation prcedures and see you at the workshop!
