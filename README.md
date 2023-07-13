@@ -126,7 +126,7 @@ make
 
 #### C - Modify CMakeLists.txt
 
-It is now possible to link CRY to exampleB1. In order to do so, we must modify the CMakeLists.txt so that GEANT4 knows how to access the CRY library. 
+It is now possible to link CRY to exampleB1. In order to do so, we must modify the CMakeLists.txt so that GEANT4 knows how to access the CRY library (Replace `usr` by your username in the path). 
 
 ```
 cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/
@@ -140,7 +140,7 @@ set(CRY_LIB -L${CRY_PATH}/lib libCRY.a)
 include_directories(${CRY_PATH}/src)
 ```
 
-Search for `target_link_libraries(exampleB1 ${Geant4_LIBRARIES})` and replace it by `target_link_libraries(exampleB1 ${Geant4_LIBRARIES}  ${CRY_LIB})` .
+Search for `target_link_libraries(exampleB1 ${Geant4_LIBRARIES})` and replace it by `target_link_libraries(exampleB1 ${Geant4_LIBRARIES} ${CRY_LIB})` .
 
 Finally, at line (check which line it is! e.g. between run1.mac and run2.mac) add `cmd.file` 
 
