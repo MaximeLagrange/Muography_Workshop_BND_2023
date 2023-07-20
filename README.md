@@ -1,8 +1,8 @@
 # Muon scattering tomography end-to-end simulation framework
 
-This repository aims at guiding the user for the installation of an end-to-end muon scattering tomography framework required for the BND School 2023, held in Wuppertal, Germany. For more information, please have look at the [introductory slides] ADD LINK!!.
+This repository aims at guiding the user for the installation of an end-to-end muon scattering tomography framework required for the BND School 2023, held in Wuppertal, Germany. For more information, please have look at the [introductory slides] (not available yet).
 
-*N.B: The full installation might take some time. Please make sure that you **install the framework prior to the workshop**! If you run into issues you cannot solve by yourself, please use the [dedicated slack chanel](https://join.slack.com/share/enQtNTU2MzQ2ODkzNzMzMy1jNGY1ODhlZjI0NDcxOWUxZTIwZWRjNjU4YTIxMDRlNjA5NzhmZjZmZTg1NjdiOTJiMWM3OTA1ZWQyN2Y4NGMw).* **Update the link before the workshop!** 
+*N.B: The full installation might take some time. Please make sure that you **install the framework prior to the workshop**! If you run into issues you cannot solve by yourself, please use the [dedicated slack chanel](https://join.slack.com/t/bndschoolmuog-b2x9179/shared_invite/zt-1y9t2l2h0-zxvZcvoVf1YD0iqp7_3EPg) or contact us at maximelagrange98@gmail.com*.
 
 ## Installation
 
