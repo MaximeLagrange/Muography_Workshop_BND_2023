@@ -126,7 +126,7 @@ make
 
 #### C - Modify CMakeLists.txt
 
-It is now possible to link CRY to exampleB1. In order to do so, we must modify the CMakeLists.txt so that GEANT4 knows how to access the CRY library (Replace `usr` by your username in the path). 
+It is now possible to link CRY to exampleB1. In order to do so, we must modify the CMakeLists.txt so that GEANT4 knows how to access the CRY library (Replace `usr` by your username in the path). Since we are here, we will also link Root with GEANT4.
 
 ```
 cd /home/usr/micromamba/envs/geant-root/share/Geant-4-11.0.3/examples/basic/B1/
@@ -138,11 +138,32 @@ Open the `CMakeLists.txt` file and after `project(B1)` add the following lines:
 set(CRY_PATH /home/usr/micromamba/envs/geant-root/cry_v1.7)
 set(CRY_LIB -L${CRY_PATH}/lib libCRY.a)
 include_directories(${CRY_PATH}/src)
+
+# Find ROOT (required package)
+
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+find_package(ROOT REQUIRED COMPONENTS RIO)
+include(${ROOT_USE_FILE})
+include_directories(${ROOT_INCLUDE_DIRS})
+find_package(ROOT REQUIRED)
+include_directories(${ROOT_INCLUDE_DIRS})
 ```
 
-Search for `target_link_libraries(exampleB1 ${Geant4_LIBRARIES})` and replace it by `target_link_libraries(exampleB1 ${Geant4_LIBRARIES} ${CRY_LIB})` .
+Search for `target_link_libraries(exampleB1 ${Geant4_LIBRARIES})` and replace it by `target_link_libraries(exampleB1 ${Geant4_LIBRARIES} ${CRY_LIB} ${ROOT_LIBRARIES})` .
 
-Finally, at line (check which line it is! e.g. between run1.mac and run2.mac) add `cmd.file` 
+Finally, at line ~60 you should see `set(EXAMPLEB1_SCRIPTS ...)`. Simply add `cmd.file` as follow:
+
+```
+set(EXAMPLEB1_SCRIPTS
+exampleb1.in
+exampleb1.out
+init_vis.mac
+run1.mac
+run2.mac
+vis.mac
+cmd.file
+)
+```
 
 #### D - Create cmd.file
 
@@ -257,12 +278,13 @@ make
 
 You should see a window poping, which displays the structure of the detector (if you run into errors, please report it in the dedicated Slack channel).
 
- ### IV - Python environment
+
+ ### V - Python environment
 
  We will use python to analyse the simulated data. We need to create an environment with all the required libraries. Once again, `micromamba` can do that with just one command line:
 
 ```
-micromamba create -n muograph_env jupyterlab pytorch pandas scikit-spatial -c conda-forge
+micromamba create -n muograph_env jupyterlab pandas scikit-spatial qt fastprogress -c conda-forge
 micromamba activate muograph_env
 ```
 
