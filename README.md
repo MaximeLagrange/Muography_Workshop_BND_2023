@@ -247,7 +247,7 @@ You must also include the `G4SystemOfUnits.hh` file by adding `#include "G4Syste
 
 ##### ActionInitialization.cc
 
-Open the `B1/src/PrimaryGeneratorAction.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
+Open the `B1/src/ActionInitialization.cc` file and replace `SetUserAction(new PrimaryGeneratorAction);` by `SetUserAction(new PrimaryGeneratorAction(""));`
 
 ##### RunAction.cc
 
