@@ -284,7 +284,7 @@ You should see a window poping, which displays the structure of the detector (if
  We will use python to analyse the simulated data. We need to create an environment with all the required libraries. Once again, `micromamba` can do that with just one command line:
 
 ```
-micromamba create -n muograph_env jupyterlab pandas scikit-spatial qt fastprogress -c conda-forge
+micromamba create -n muograph_env jupyterlab pandas scikit-spatial scikit-learn pyqt joblib qt fastprogress -c conda-forge
 micromamba activate muograph_env
 ```
 
