@@ -198,6 +198,7 @@ def plot_poca_3D_cloud(poca:POCA, mask:Optional[np.ndarray]=None, alpha:float=0.
         plt.colorbar(im, location='right')
     else:
         im = ax.scatter(x,y,z,alpha=alpha)
+        ax.set_aspect("equal")
 
     ax.set_xlabel("x [mm]")
     ax.set_ylabel("y [mm]")
@@ -241,7 +242,7 @@ def plot_poca_points_summary(hit_per_voxel:np.ndarray, filename:str=None):
     plt.show()
     
     fig,ax = plt.subplots()
-    fig.suptitle('POCA reconstruction: voxel scores')
+    fig.suptitle('POCA reconstruction: poca points per voxel')
     ax.set_title('XY view')
     ax.set_xlabel('y [a.u]')
     ax.set_ylabel('z [a.u]')
@@ -285,7 +286,7 @@ def plot_poca_summary(scores:np.ndarray, filename:str=None):
     
     fig,ax = plt.subplots()
     fig.suptitle('POCA reconstruction: voxel scores')
-    ax.set_title('XY view')
+    ax.set_title('XZ view')
     ax.set_xlabel('x [a.u]')
     ax.set_ylabel('z [a.u]')
     im = ax.imshow(scores.sum(axis=1).T,cmap='binary',origin="lower")
@@ -299,7 +300,7 @@ def plot_poca_summary(scores:np.ndarray, filename:str=None):
     
     fig,ax = plt.subplots()
     fig.suptitle('POCA reconstruction: voxel scores')
-    ax.set_title('XY view')
+    ax.set_title('YY view')
     ax.set_xlabel('y [a.u]')
     ax.set_ylabel('z [a.u]')
     im = ax.imshow(scores.sum(axis=0).T,cmap='binary',origin="lower")
